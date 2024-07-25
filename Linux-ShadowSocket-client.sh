@@ -1,18 +1,30 @@
 #!/bin/bash
+# execute:sudo ./Linux-ShadowSocket-client.sh <server_address> 
+# remote execute：curl -sL https://raw.githubusercontent.com/Mrxyy/useful-scripts/master/Linux-ShadowSocket-client.sh | sudo bash -s <server_address>
+
+# 检查是否传入参数
+if [ -z "$1" ]; then
+  echo "请提供 Shadowsocks 服务器地址作为参数。"
+  echo "用法: sudo ./setup_shadowsocks.sh <server_address>"
+  exit 1
+fi
+
+# 获取传入的服务器地址
+SERVER_ADDRESS=$1
 
 # 创建 Shadowsocks 配置文件
-sudo sh -c 'cat > /etc/shadowsocks.json << EOF
+sudo sh -c "cat > /etc/shadowsocks.json << EOF
 {
-    "server":"103.61.39.125",
-    "server_port":9800,
-    "local_address": "127.0.0.1",
-    "local_port":1080,
-    "password":"123789",
-    "timeout":300,
-    "method":"aes-256-cfb",
-    "fast_open": false
+    \"server\":\"$SERVER_ADDRESS\",
+    \"server_port\":9800,
+    \"local_address\": \"127.0.0.1\",
+    \"local_port\":1080,
+    \"password\":\"123789\",
+    \"timeout\":300,
+    \"method\":\"aes-256-cfb\",
+    \"fast_open\": false
 }
-EOF'
+EOF"
 
 # 克隆 Shadowsocks 源码
 git clone https://github.com/shadowsocks/shadowsocks-libev.git
