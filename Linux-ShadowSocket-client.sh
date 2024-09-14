@@ -58,4 +58,21 @@ sudo apt-get install -y proxychains
 # 修改 Proxychains 配置
 sudo sed -i '$c\socks5 127.0.0.1 1080' /etc/proxychains.conf
 
-echo "Shadowsocks and Proxychains setup completed."
+# 1. 安装 Privoxy
+sudo apt install -y privoxy
+
+# 2. 修改 /etc/privoxy/config 文件以设置 SOCKS5 代理
+echo "forward-socks5 / 127.0.0.1:1080 ." | sudo tee -a /etc/privoxy/config
+
+# 3. 添加代理环境变量到 ~/.bashrc
+echo -e 'export http_proxy="http://127.0.0.1:8118"\nexport https_proxy="http://127.0.0.1:8118"\nexport ftp_proxy="http://127.0.0.1:8118"\nexport no_proxy="localhost,127.0.0.1"' >> ~/.bashrc
+
+# 4. 使更改生效
+source ~/.bashrc
+
+sudo systemctl start proxychains
+sudo systemctl enable proxychains
+sudo systemctl start privoxy
+sudo systemctl enable privoxy
+
+echo "安装和配置完成！"
